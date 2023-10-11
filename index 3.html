@@ -1,0 +1,194 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Calculator</title>
+		<style></style>
+		<script>
+			/*
+				initialize
+				
+				This function is responsible for declaring and defining the global variables for the page.
+			*/
+			function initialize()
+			{
+				equationOutput = document.getElementById("equation");
+				
+				/*
+					All of the numbers are set to 0 and the initial operator is addition.
+					When writing a program, it is up to the programmer to decide the most appropriate initial values for global variables.
+				*/
+				firstNumber = 0;
+				secondNumber = 0;
+				operand = "+";
+				answer = 0;
+				
+				/*
+					There is no text in the ouput div so a call to display() is necessary.
+				*/
+				display();
+			}
+			
+			/*
+				updateFirstNumber
+				
+				Changes the value of the first operand.
+				
+				parameters:
+					modifier - the value by which the operand will change.
+			*/
+			function updateFirstNumber(modifier)
+			{
+				/*
+					Though I am using addition here, firstNumber can go down by 1 if the modifier is -1.
+				*/
+				firstNumber += modifier;
+				
+				/*
+					The call to calculate will update the solution to the equation based on the new first number.
+				*/
+				calculate();
+			}
+			
+			/*
+				updateSecondNumber
+				
+				Changes the value of the second operand.
+				
+				parameters:
+					modifier - the value by which the operand will change.
+			*/
+			function updateSecondNumber(modifier)
+			{
+				secondNumber += modifier;
+				calculate();
+			}
+			
+			/*
+				chooseOperand
+				
+				Selects the proper operator for the calculation.  The function uses the value of the parameter to set the value of the global variable.
+				
+				parameters:
+					op - a string representation of the operator.
+			*/
+			function chooseOperand(op)
+			{
+				operand = op;
+				calculate();
+			}
+			
+			/*
+				calculate
+				
+				This function is responsible for updating the global answer variable based on the current values of bother numbers and the operator.
+				
+				This function uses and if - else ladder in order to determine which operation to perform.  Notice that each if and each else has its own set of braces.  If you'll remember, it was noted in the lesson on conditionals that you can omit braces when there is only one line of code in the block.  I have NOT omitted the braces, but you will see code without them online.  The code below could look like this:
+				
+					if (operand == "+")
+						answer = firstNumber + secondNumber;
+					else
+						if (operand == "-")
+							answer = firstNumber - secondNumber;
+						else
+							if (operand == "*")
+								answer = firstNumber * secondNumber;
+							else
+								answer = firstNumber / secondNumber;
+								
+				Even though indentation would suggest that everything below the first else belongs to the first else (more than one line), it really only contains the next if, which contains the next line and is associated with the next else, etc...
+				
+				The browser does not even need line breaks so you might see cod that looks like this:
+				
+					if (operand == "+")
+						answer = firstNumber + secondNumber;
+					else if (operand == "-")
+						answer = firstNumber - secondNumber;
+					else if (operand == "*")
+						answer = firstNumber * secondNumber;
+					else
+						answer = firstNumber / secondNumber;
+						
+				Even though the indentation would indicate that there is an "else if", that is actually not the case.  If the else block would have more lines than just the subsequent if, you would certainly need braces.
+				
+				Be VERY careful when writing blocks of code.  It's very easy to make a mistake and very hard to track it down.
+			*/
+			function calculate()
+			{
+				/*
+					By using if and else in this block, it makes all of the options mutually exclusive, meaning if it's one it cannot be any of the others.  This helps the system process the instructions more quickly.
+					
+					Also note that the code doesn't specifically indicate division.  This is because, by the time it gets down there, division is all that's left.
+				*/
+				if (operand == "+")
+				{
+					answer = firstNumber + secondNumber;
+				}
+				else
+				{
+					if (operand == "-")
+					{
+						answer = firstNumber - secondNumber;
+					}
+					else
+					{
+						if (operand == "*")
+						{
+							answer = firstNumber * secondNumber;
+						}
+						else
+						{
+							answer = firstNumber / secondNumber;
+						}
+					}
+				}
+				
+				display();
+			}
+			
+			/*
+				display
+				
+				This function is responsible for sending output to the screen.
+			*/
+			function display()
+			{
+				/*
+					This line shows string building through the use of concatenation.  There are several parts of this output that come from variables and other parts that come from string literals.  Using concatenation, they can be strung together to form a single value.
+					
+					BE CAREFUL WHEN STRING BUILDING:
+						The first most common mistake is the accidental omission of the operator (+).
+						The second most common mistake is forgetting to put spaces into your literals so that your output is formatted nicely.
+						
+					Another way to do with would be to use a template literal.  A template literal is a way to embed a variable directly into a string.  It would look like this:
+					
+						equationOutput.innerHTML = `${firstNumber} ${operand} ${secondNumber} = ${answer}`;
+						
+					Instead of using quotes, a template literal uses backticks (`).  Don't confuse this with a single quote (').
+					When a variable is embedded, it needs the dollar sign ($) and must be surrounded by braces ({}).
+					Everything else in the string will be considered literal.  In the above case, that's all of the spaces and the equals sign.
+					
+					There are all kinds of ways to take advantage of template literals, but they are outside the scope of this program.  Feel free to investigate those on your own.
+				*/
+				equationOutput.innerHTML = firstNumber + " " + operand + " " + secondNumber + " = " + answer;
+			}
+		</script>
+	</head>
+		
+	<body onload = "initialize();">
+		<div id = "equation"></div>
+		<hr />
+		<!-- 
+			The calculation is based on two numbers and an operator.  The first 4 buttons allow you to change the operands (the 2 numbers) by adding or subtracting 1 to them.  Notice how these functions pass arguments through, + or - 1 depending on whether you're adding or subtracting.
+			
+			The next 4 buttons choose the operation.  These functions pass through a simple string character that indicates which operation is being performed. Javascript CANNOT use the string representation of an operator to perform the actual operation. We'll just use it to tell us which calculation to perform.
+		-->
+		<button onclick = "updateFirstNumber(1);">First Number ++</button> 
+		<button onclick = "updateFirstNumber(-1);">First Number --</button> 
+		<button onclick = "updateSecondNumber(1);">Second Number ++</button> 
+		<button onclick = "updateSecondNumber(-1);">Second Number ++</button>
+		<button onclick = "chooseOperand('+')">Addition</button> 
+		<button onclick = "chooseOperand('-')">Subtraction</button> 
+		<button onclick = "chooseOperand('*')">Multiplication</button> 
+		<button onclick = "chooseOperand('/')">Division</button>
+	</body>
+</html>
